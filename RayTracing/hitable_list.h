@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef HITABLELISTH
-#define HITABLELISTH
-#endif // HITABLELISTH
-
 #include "hitable.h"
 
 class hitable_list : public hitable {

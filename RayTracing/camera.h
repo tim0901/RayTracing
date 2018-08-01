@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef CAMERAH
-#define CAMERAH
-#endif // !CAMERAH
-
 #include "ray.h"
 
 class camera {

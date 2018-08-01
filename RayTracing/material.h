@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef MATERIALH
-#define MATERIALH
-#endif // !MATERIALH
-
 #include "ray.h"
 #include "hitable.h"
 
@@ -19,13 +15,14 @@ vec3 random_in_unit_sphere() {
 	return p;
 }
 
-//tells us how rays interact with the surface
+//Tells us how rays interact with the surface
 class material {
 public:
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const = 0;
 
 };
 
+//Defines properties of a lambertian material
 class lambertian : public material {
 public:
 	lambertian(const vec3& a) : albedo(a) {}
@@ -39,7 +36,7 @@ public:
 	vec3 albedo;
 };
 
-
+//Defines properties of a metallic material
 class metal :public material {
 public:
 	metal(const vec3& a, float f) : albedo(a) { if (f < 1) fuzz = f; else fuzz = 1; }

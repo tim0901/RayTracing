@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include <math.h>
@@ -36,7 +34,6 @@ public:
 	inline vec3& operator*=(const float t);
 	inline vec3& operator/=(const float t);
 
-	//
 	inline float length() const {
 		return sqrt(e[0] * e[0] + e[1] * e[1] + e[2] * e[2]);
 	}
@@ -49,8 +46,6 @@ public:
 	inline void make_unit_vector();
 
 	float e[3];
-
-
 };
 
 inline std::istream& operator>>(std::istream &is, vec3 &t) {

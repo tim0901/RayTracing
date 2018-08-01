@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef SPHEREH
-#define SPHEREH
-#endif // SPHEREH
-
 #include "hitable.h"
 
 class sphere : public hitable {
