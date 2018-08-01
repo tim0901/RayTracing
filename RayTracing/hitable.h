@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef HITABLEH
-#define HITABLEH
-#endif // HITABLEH
-
 #include "ray.h"
 
 class material;
