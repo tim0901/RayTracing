@@ -5,16 +5,11 @@
 #include <GLFW\glfw3.h>
 #include <Windows.h>
 #include <gl\wglext.h>
-#include <fstream>
-#include <vector>
-#include <string>
 #include "glad.c"
 #include "shader.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 //OpenGL Defines
-int initialiseWindow();
+int initialiseWindow(int nx, int ny, int n, unsigned char *outputArray);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void CheckForGLError();
