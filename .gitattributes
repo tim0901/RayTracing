@@ -62,5 +62,5 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-
+# Sets glad.c as a vendored file, excluding it from language statistics
 RayTracing/glad.c linguist-vendored=true
