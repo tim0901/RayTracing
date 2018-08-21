@@ -63,4 +63,4 @@
 #*.RTF   diff=astextplain
 
 
-#glad.c linguist-vendored=true
+RayTracing/glad.c linguist-vendored=true
