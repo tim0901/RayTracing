@@ -9,9 +9,9 @@
 #include "shader.h"
 
 //OpenGL Defines
-int initialiseWindow(int nx, int ny, int n, unsigned char *outputArray);
+int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *windowOpen);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
+bool processInput(GLFWwindow *window, bool windowOpen);
 void CheckForGLError();
 bool WGLExtensionSupported(const char *extension_name);
 void terminateWindow();
@@ -27,7 +27,7 @@ unsigned int texture1;
 float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
 
 
-int initialiseWindow(int nx, int ny, int n, unsigned char *outputArray) {
+int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *windowOpen) {
 
 
 	//initialize GLFW
@@ -180,47 +180,44 @@ int initialiseWindow(int nx, int ny, int n, unsigned char *outputArray) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nx, ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)outputArray);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nx, ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*outputArray);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-}
+	while (n != 0 || *windowOpen != false) {
 
-
-void renderLoop(int nx, int ny, int n, unsigned char *outputArray)
-{
-
-	//Every shader and rendering call after this will use this program objects
+		glfwMakeContextCurrent(window);
+		//Every shader and rendering call after this will use this program objects
 
 		//Keep window updated and responsive
-	processInput(window);
+		*windowOpen = processInput(window, windowOpen);
 
-	//Render Stuff
-	//
-	//Generate texture
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, nx, ny, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)outputArray);
-	glGenerateMipmap(GL_TEXTURE_2D);
+		//Render Stuff
+		//
+		//Generate texture
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, nx, ny, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*outputArray);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
-	//Resets window every cycle, stops previous iteration's results being seen
-	//Decides colour to be used
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	//Fills entire colour buffer with colour defined above
-	glClear(GL_COLOR_BUFFER_BIT);
+		//Resets window every cycle, stops previous iteration's results being seen
+		//Decides colour to be used
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		//Fills entire colour buffer with colour defined above
+		glClear(GL_COLOR_BUFFER_BIT);
 
-	//Binds textures on corresponding texture units
-	glActiveTexture(GL_TEXTURE0);//activates texture unit before binding it
-	glBindTexture(GL_TEXTURE_2D, texture1);
+		//Binds textures on corresponding texture units
+		glActiveTexture(GL_TEXTURE0);//activates texture unit before binding it
+		glBindTexture(GL_TEXTURE_2D, texture1);
 
-	//ourShader.use();
-	//Draw elements in buffer
-	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//ourShader.use();
+		//Draw elements in buffer
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-	//GLFW: swap buffers and poll IO events
-	glfwSwapBuffers(window);
-	glfwPollEvents();
+		//GLFW: swap buffers and poll IO events
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
 
 }
-
 
 //When the user resizes the window, this adjusts the viewport respectively
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -229,11 +226,14 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 }
 
 //IO events
-void processInput(GLFWwindow *window) {
+bool processInput(GLFWwindow *window, bool windowOpen) {
 	//Kills window on ESC
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
+		windowOpen = false;
 	}
+
+	return windowOpen;
 
 }
 
