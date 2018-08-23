@@ -73,6 +73,8 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 	//Resizes viewport when window is resized
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+	glfwSetWindowAspectRatio(window, nx, ny);
+
 	//Initializes GLAD which manages function pointers for OpenGL
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
@@ -185,7 +187,6 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 
 	while (n != 0 || *windowOpen != false) {
 
-		glfwMakeContextCurrent(window);
 		//Every shader and rendering call after this will use this program objects
 
 		//Keep window updated and responsive
