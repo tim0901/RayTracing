@@ -65,3 +65,4 @@
 # Sets glad.c as a vendored file, excluding it from language statistics
 RayTracing/glad.c linguist-vendored = true
 stb_image_write.h linguist-vendored = true
+stb_image.h linguist-vendored = true

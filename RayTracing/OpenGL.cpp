@@ -7,27 +7,17 @@
 #include <gl\wglext.h>
 #include "glad.c"
 #include "shader.h"
+#include "image_parameters.h"
 
 //OpenGL Defines
-int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *windowOpen);
+int initialiseWindow(image_parameters* image, bool *windowOpen);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 bool processInput(GLFWwindow *window, bool windowOpen);
 void CheckForGLError();
 bool WGLExtensionSupported(const char *extension_name);
 void terminateWindow();
 
-GLFWwindow* window;
-
-//Stores vertices in GPU memory
-//
-unsigned int VBO, VAO, EBO;
-
-//Textures
-unsigned int texture1;
-float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-
-
-int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *windowOpen) {
+int initialiseWindow(image_parameters* image, bool *windowOpen) {
 
 
 	//initialize GLFW
@@ -45,20 +35,22 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 	int xDim = GetSystemMetrics(SM_CXSCREEN);
 	int yDim = GetSystemMetrics(SM_CYSCREEN);
 
-	if (nx > xDim)
+	if (image->nx > xDim)
 	{
 
-		yDim = (float(ny) / float(nx)) * float(xDim);
+		yDim = (float(image->ny) / float(image->nx)) * float(xDim);
 
 	}
-	else if (ny > yDim)
+	else if (image->ny > yDim)
 	{
-		xDim = (float(nx) / float(ny))*float(yDim);
+		xDim = (float(image->nx) / float(image->ny))*float(yDim);
 	}
 	else {
-		xDim = nx;
-		yDim = ny;
+		xDim = image->nx;
+		yDim = image->ny;
 	}
+
+	GLFWwindow* window;
 
 	//This creates a window object
 	window = glfwCreateWindow(xDim, yDim, "Render", NULL, NULL);
@@ -73,7 +65,7 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 	//Resizes viewport when window is resized
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	glfwSetWindowAspectRatio(window, nx, ny);
+	glfwSetWindowAspectRatio(window, image->nx, image->ny);
 
 	//Initializes GLAD which manages function pointers for OpenGL
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -107,6 +99,7 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 
 	//Stores vertices in GPU memory
 	//
+	unsigned int VBO, VAO, EBO;
 	//Vertex array object - stores states of verticies for a single object, allowing easy recall
 	//Element buffer object
 	//Assigns OpenGL ID
@@ -158,6 +151,7 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 	//Texture
 	//
 	//Texture 1
+	unsigned int texture1;
 	glGenTextures(1, &texture1);
 
 	ourShader.use();
@@ -172,6 +166,7 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	//Colour outside borders
+	float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	//Texture Filtering
@@ -182,10 +177,10 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, nx, ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*outputArray);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->nx, image->ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*image->outputArrayPtr);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	while (n != 0 || *windowOpen != false) {
+	while (*windowOpen != false) {
 
 		//Every shader and rendering call after this will use this program objects
 
@@ -195,7 +190,7 @@ int initialiseWindow(int nx, int ny, int n, unsigned char **outputArray, bool *w
 		//Render Stuff
 		//
 		//Generate texture
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, nx, ny, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*outputArray);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, image->nx, image->ny, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*image->outputArrayPtr);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		//Resets window every cycle, stops previous iteration's results being seen

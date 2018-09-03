@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef SHADER_H
+#define SHADER_H
+
 #include <glad/glad.h>
 
 #include <string>
@@ -118,3 +122,5 @@ private:
 		}
 	}
 };
+
+#endif // !SHADER_H

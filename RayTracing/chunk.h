@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef CHUNK_H
+#define CHUNK_H
+
+
 #include "vec3.h"
 #include "camera.h"
 #include <math.h>
@@ -7,19 +11,19 @@
 #include <iostream>
 
 //defines a chunk as a container for the start and end x and y dimensions
-//Also contains the number of samples to be taken per pixel
 
 class chunk {
 public:
 
-	int position[5];
+	int position[4];
 
 	chunk() {};
-	chunk(int startX, int endX, int startY, int endY, int ns) { position[0] = startX; position[1] = endX; position[2] = startY; position[3] = endY; position[4] = ns; }
+	chunk(int startX, int endX, int startY, int endY) { position[0] = startX; position[1] = endX; position[2] = startY; position[3] = endY; }
 
 	inline int startX() const { return position[0]; }
 	inline int endX() const { return position[1]; }
 	inline int startY() const { return position[2]; }
 	inline int endY() const { return position[3]; }
-	inline int ns() const { return position[4]; }
 };
+
+#endif //CHUNK_H
