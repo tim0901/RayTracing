@@ -8,7 +8,7 @@
 
    in the file that you want to have the implementation.
 
-   Will probably not work correctly witah strict-aliasing optimizations.
+   Will probably not work correctly with strict-aliasing optimizations.
 
    If using a modern Microsoft Compiler, non-safe versions of CRT calls may cause
    compilation warnings or even errors. To avoid this, also before #including,
@@ -1439,14 +1439,17 @@ static int stbi_write_jpg_core(stbi__write_context *s, int width, int height, in
 				float YDU[64], UDU[64], VDU[64];
 				for (row = y, pos = 0; row < y + 8; ++row) {
 					for (col = x; col < x + 8; ++col, ++pos) {
-						int p = (stbi__flip_vertically_on_write ? height - 1 - row : row)*width*comp + col * comp;
 						float r, g, b;
-						if (row >= height) {
-							p -= width * comp*(row + 1 - height);
+						int p;
+						if (row < height) {
+							p = (stbi__flip_vertically_on_write ? (height - 1 - row) : row)*width*comp;
 						}
-						if (col >= width) {
-							p -= comp * (col + 1 - width);
+						else {
+							// row >= height => use last input row (=> first if flipping)
+							p = stbi__flip_vertically_on_write ? 0 : ((height - 1)*width*comp);
 						}
+						// if col >= width => use pixel from last input column
+						p += ((col < width) ? col : (width - 1))*comp;
 
 						r = imageData[p + 0];
 						g = imageData[p + ofsG];
