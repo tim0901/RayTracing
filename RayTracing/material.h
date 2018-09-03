@@ -6,6 +6,7 @@
 #include "ray.h"
 #include "hitable.h"
 #include "drand48.h"
+#include "texture.h"
 
 float schlick(float cosine, float ref_idx) {
 	float r0 = (1 - ref_idx) / (1 + ref_idx);
@@ -47,15 +48,15 @@ public:
 //Defines properties of a lambertian material
 class lambertian : public material {
 public:
-	lambertian(const vec3& a) : albedo(a) {}
+	lambertian(texture* a) : albedo(a) {}
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
 		vec3 target = rec.p + rec.normal + random_in_unit_sphere();
 		scattered = ray(rec.p, target - rec.p, r_in.time());
-		attenuation = albedo;
+		attenuation = albedo->value(0,0,rec.p);
 		return true;
 	}
 
-	vec3 albedo;
+	texture* albedo;
 };
 
 //Defines properties of a metallic material
@@ -77,7 +78,6 @@ class dielectric : public material {
 public:
 	float ref_idx;
 	dielectric(const vec3& a, float ri) : albedo(a), ref_idx(ri) {}
-	vec3 albedo;
 	
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
 		vec3 outward_normal;
@@ -124,6 +124,8 @@ public:
 		}
 		return true;
 	}
+
+	vec3 albedo;
 
 };
 

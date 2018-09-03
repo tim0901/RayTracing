@@ -153,8 +153,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="aabb.h" />
+    <ClInclude Include="bvh.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="chunk.h" />
+    <ClInclude Include="drand48.h" />
+    <ClInclude Include="hitable.h" />
+    <ClInclude Include="hitable_list.h" />
+    <ClInclude Include="image_parameters.h" />
+    <ClInclude Include="material.h" />
+    <ClInclude Include="moving_sphere.h" />
+    <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="perlin.h" />
+    <ClInclude Include="ray.h" />
+    <ClInclude Include="scenes.h" />
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="sphere.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenGL.cpp" />
