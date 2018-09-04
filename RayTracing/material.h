@@ -42,21 +42,21 @@ vec3 random_in_unit_sphere() {
 class material {
 public:
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const = 0;
-
+	virtual vec3 emitted(float u, float v, const vec3& p) const { return vec3(0, 0, 0); }
 };
 
 //Defines properties of a lambertian material
 class lambertian : public material {
 public:
-	lambertian(texture* a) : albedo(a) {}
+	lambertian(texture *a) : albedo(a) {}
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
 		vec3 target = rec.p + rec.normal + random_in_unit_sphere();
 		scattered = ray(rec.p, target - rec.p, r_in.time());
-		attenuation = albedo->value(0,0,rec.p);
+		attenuation = albedo->value(rec.u, rec.v, rec.p);
 		return true;
 	}
 
-	texture* albedo;
+	texture *albedo;
 };
 
 //Defines properties of a metallic material
@@ -129,4 +129,11 @@ public:
 
 };
 
+class diffuse_light : public material {
+public:
+	diffuse_light(texture *a) : emit(a) {}
+	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const { return false; }
+	virtual vec3 emitted(float u, float v, const vec3& p) const { return emit->value(u, v, p); }
+	texture *emit;
+};
 #endif //MATERIAL_H
