@@ -8,6 +8,7 @@
 #include "glad.c"
 #include "shader.h"
 #include "image_parameters.h"
+#include "stb_image.h"
 
 //OpenGL Defines
 int initialiseWindow(image_parameters* image, bool *windowOpen);
@@ -62,6 +63,13 @@ int initialiseWindow(image_parameters* image, bool *windowOpen) {
 	}
 	glfwMakeContextCurrent(window);
 
+	int x(0), y(0), n(NULL);
+
+	GLFWimage icons[1];
+	icons[0].pixels = stbi_load("icon.png", &icons->width, &icons->height, &n, 4);
+
+	glfwSetWindowIcon(window, 1, icons);
+	
 	//Resizes viewport when window is resized
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -170,14 +178,14 @@ int initialiseWindow(image_parameters* image, bool *windowOpen) {
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 	//Texture Filtering
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	//Mipmaps
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->nx, image->ny, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*image->outputArrayPtr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, image->nx, image->ny, 0, GL_RGBA, GL_FLOAT, (GLvoid*)*image->outputArrayPtr);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	while (*windowOpen != false) {
@@ -190,7 +198,7 @@ int initialiseWindow(image_parameters* image, bool *windowOpen) {
 		//Render Stuff
 		//
 		//Generate texture
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, image->nx, image->ny, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)*image->outputArrayPtr);
+		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, image->nx, image->ny, GL_RGBA, GL_FLOAT, (GLvoid*)*image->outputArrayPtr);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
 		//Resets window every cycle, stops previous iteration's results being seen

@@ -14,8 +14,8 @@ struct image_parameters {
 	int ny;
 	int ns;
 
-	unsigned char *outputArray = { 0 };
-	unsigned char **outputArrayPtr = &outputArray;
+	float *outputArray = { 0 };
+	float **outputArrayPtr = &outputArray;
 	std::list<chunk> chunkList;
 	std::list<chunk>::iterator iter;
 

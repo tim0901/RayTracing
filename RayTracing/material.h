@@ -45,6 +45,17 @@ public:
 	virtual vec3 emitted(float u, float v, const vec3& p) const { return vec3(0, 0, 0); }
 };
 
+class isotropic : public material {
+public:
+	isotropic(texture *a) : albedo(a) {}
+	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
+		scattered = ray(rec.p, random_in_unit_sphere());
+		attenuation = albedo->value(rec.u, rec.v, rec.p);
+		return true;
+	}
+	texture *albedo;
+};
+
 //Defines properties of a lambertian material
 class lambertian : public material {
 public:
@@ -77,7 +88,7 @@ public:
 class dielectric : public material {
 public:
 	float ref_idx;
-	dielectric(const vec3& a, float ri) : albedo(a), ref_idx(ri) {}
+	dielectric(float ri) :ref_idx(ri) {}
 	
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
 		vec3 outward_normal;
@@ -87,7 +98,7 @@ public:
 		vec3 refracted;
 		float reflect_prob;
 		float cosine;
-		attenuation = albedo;
+		//attenuation = albedo;
 
 		// when ray shoot through object back into vacuum,
 		// ni_over_nt = ref_idx, surface normal has to be inverted
@@ -95,8 +106,9 @@ public:
 		if (dot(r_in.direction(), rec.normal) > 0) {
 			outward_normal = -rec.normal;
 			ni_over_nt = ref_idx;
-            cosine = dot(r_in.direction(), rec.normal) / r_in.direction().length();
-            cosine = sqrt(1 - ref_idx*ref_idx*(1-cosine*cosine));
+            //cosine = dot(r_in.direction(), rec.normal) / r_in.direction().length();
+            //cosine = sqrt(1 - ref_idx*ref_idx*(1-cosine*cosine));
+			cosine = ref_idx * dot(r_in.direction(), rec.normal) / r_in.direction().length();
 		}
 		else {
 			outward_normal = rec.normal;

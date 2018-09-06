@@ -9,7 +9,7 @@
 class material;
 
 void get_sphere_uv(const vec3& p, float& u, float& v) {
-	float M_PI = 3.14159;
+	//float M_PI = 3.14159265358979323846;
 	float phi = atan2(p.z(), p.x());
 	float theta = asin(p.y());
 	u = 1 - (phi + M_PI) / (2 * M_PI);
@@ -75,7 +75,6 @@ public:
 };
 
 rotate_y::rotate_y(hitable *p, float angle) : ptr(p) {
-	float M_PI = 3.14159;
 	float radians = (M_PI / 180.) * angle;
 	sin_theta = sin(radians);
 	cos_theta = cos(radians);
