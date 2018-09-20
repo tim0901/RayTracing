@@ -3,6 +3,10 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif // !M_PI
+
 
 #include "ray.h"
 #include "drand48.h"
@@ -18,15 +22,14 @@ inline vec3 random_in_unit_disk() {
 
 class camera {
 public:
-
-	const double PI = 3.1415;
+	
 	//vfov is top to bottom in degrees
 	camera(vec3 lookfrom, vec3 lookat, vec3 vup, float vfov, float aspect, float aperture, float focus_dist, float t0, float t1) {
 		
 		time0 = t0;
 		time1 = t1;
 
-		float theta = vfov * PI / 180;
+		float theta = vfov * M_PI / 180;
 		float half_height = tan(theta / 2);
 		float half_width = aspect * half_height;
 

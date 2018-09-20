@@ -5,6 +5,7 @@
 
 
 #include "hitable.h"
+#include "pdf.h"
 
 class hitable_list : public hitable {
 public:
@@ -12,6 +13,8 @@ public:
 	hitable_list(hitable **l, int n) { list = l; list_size = n; }
 	virtual bool hit(const ray& r, float tmin, float tmax, hit_record& rec) const;
 	virtual bool bounding_box(float t0, float t1, aabb& box) const;
+	virtual float  pdf_value(const vec3& o, const vec3& v) const;
+	virtual vec3 random(const vec3& o) const;
 	hitable **list;
 	int list_size;
 };
@@ -46,6 +49,20 @@ bool hitable_list::hit(const ray& r, float t_min, float t_max, hit_record& rec) 
 		}
 	}
 	return hit_anything;
+}
+
+float hitable_list::pdf_value(const vec3& o, const vec3& v) const {
+	float weight = 1.0 / list_size;
+	float sum = 0;
+	for (int i = 0; i < list_size; i++) {
+		sum += weight * list[i]->pdf_value(o, v);
+	}
+	return sum;
+}
+
+vec3 hitable_list::random(const vec3& o) const {
+	int index = int(drand48()*list_size);
+	return list[index]->random(o);
 }
 
 #endif //HITABLE_LIST_H
