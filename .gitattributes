@@ -66,3 +66,4 @@
 RayTracing/glad.c linguist-vendored = true
 stb_image_write.h linguist-vendored = true
 stb_image.h linguist-vendored = true
+tiny_obj_loader.h linguist-vendored = true
