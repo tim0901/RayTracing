@@ -164,8 +164,10 @@
     <ClInclude Include="hitable_list.h" />
     <ClInclude Include="image_parameters.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="moving_sphere.h" />
     <ClInclude Include="OpenGL.h" />
+    <ClInclude Include="pdf.h" />
     <ClInclude Include="perlin.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="scenes.h" />
@@ -176,6 +178,9 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="triangle.h" />
+    <ClInclude Include="vec2.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <ItemGroup>

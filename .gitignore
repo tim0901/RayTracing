@@ -263,3 +263,6 @@ __pycache__/
 /RayTracing/out.hdr
 /RayTracing/out.png
 /RayTracing/out123.ppm
+/RayTracing/out.ppm
+*.mtl
+*.obj

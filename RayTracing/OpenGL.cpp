@@ -20,6 +20,7 @@ void terminateWindow();
 
 int initialiseWindow(image_parameters* image, bool *windowOpen) {
 
+	std::cout << "window initialisation begin" << std::endl;
 
 	//initialize GLFW
 	glfwInit();
@@ -52,9 +53,10 @@ int initialiseWindow(image_parameters* image, bool *windowOpen) {
 	}
 
 	GLFWwindow* window;
-
 	//This creates a window object
 	window = glfwCreateWindow(xDim, yDim, "Render", NULL, NULL);
+
+
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
